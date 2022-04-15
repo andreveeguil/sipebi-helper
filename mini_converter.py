@@ -1,30 +1,47 @@
 import os
 
-file_mapping = {
-    "Sipebi.Core/Mini/SipebiMiniEditor.cs": "SipebiMini.Editor",
-    "Sipebi.Core/Mini/SipebiMiniDiagnosticsReport.cs": "SipebiMini.Core",
-    "Sipebi.Core/Mini/SipebiMiniParagraph.cs": "SipebiMini.Core",
-    "Sipebi.Core/Mini/SipebiMiniWordDivision.cs": "SipebiMini.Core",
-    "Sipebi.Core/DataModels/Diagnostics/SipebiDiagnosticsError.cs": "SipebiMini.Core",
-    "Sipebi.Core/DataModels/Diagnostics/SipebiDiagnosticsErrorInformation.cs": "SipebiMini.Core",
-    "Sipebi.Core/Core/SipebiWordPositionInSentence.cs": "SipebiMini.Core",
-    "Sipebi.Core/Core/": "SipebiMini.Analyser",
-    "Sipebi.Core/Constants/": "SipebiMini.Analyser",
-    "Sipebi.Core/Extension/": "SipebiMini.Analyser",
-    "Sipebi.Core/Mini/SipebiMiniAnalyser.cs": "SipebiMini.Analyser",
-    "Sipebi.Core/DataModels/": "SipebiMini.Analyser",
+root_folder = "Sipebi.Core"
+
+rel_file_mapping = {
+    "/Mini/SipebiMiniEditor.cs": "SipebiMini.Editor",
+    "/Mini/SipebiMiniDiagnosticsReport.cs": "SipebiMini.Core",
+    "/Mini/SipebiMiniParagraph.cs": "SipebiMini.Core",
+    "/Mini/SipebiMiniWordDivision.cs": "SipebiMini.Core",
+    "/DataModels/Diagnostics/SipebiDiagnosticsError.cs": "SipebiMini.Core",
+    "/DataModels/Diagnostics/SipebiDiagnosticsErrorInformation.cs": "SipebiMini.Core",
+    "/Core/SipebiWordPositionInSentence.cs": "SipebiMini.Core",
+    "/Core/": "SipebiMini.Analyser",
+    "/Constants/": "SipebiMini.Analyser",
+    "/Extension/": "SipebiMini.Analyser",
+    "/Mini/SipebiMiniAnalyser.cs": "SipebiMini.Analyser",
+    "/DataModels/": "SipebiMini.Analyser",
 }
 
-namespace_files_list = ["Sipebi.Core/Mini/SipebiMiniEditor.cs", "Sipebi.Core/Core/SipebiEngine.cs", "Sipebi.Core/Core/SipebiParagraph.cs",
-                        "Sipebi.Core/Core/SipebiSettings.cs", "Sipebi.Core/Core/SipebiWordDivision.cs", "Sipebi.Core/Constants/GlobalHolder.cs",
-                        "Sipebi.Core/Mini/SipebiMiniAnalyzer.cs", "Sipebi.Core/DataModels/Diagnostics/SipebiDiagnosticsError.cs"]
+file_mapping = {root_folder + k: v for (k, v) in rel_file_mapping.items()}
 
-excluded_files = ["Sipebi.Core/Core/SipebiAnalyser.cs", "Sipebi.Core/Core/SipebiEditor.cs", "Sipebi.Core/Core/SipebiWordPositionInSentence.cs",
-                  "Sipebi.Core/DataModels/Diagnostics/SipebiDiagnosticsError.cs", "Sipebi.Core/DataModels/Diagnostics/SipebiDiagnosticsErrorInformation.cs",
-                  "Sipebi.Core/DataModels/Data/Items/Entri.cs", "Sipebi.Core/DataModels/Data/Items/EntriSipebi.cs",
-                  "Sipebi.Core/DataModels/Data/Items/Makna.cs", "Sipebi.Core/DataModels/Data/Items/SipebiFeedback.cs",
-                  "Sipebi.Core/DataModels/ApplicationPage.cs", "Sipebi.Core/Constants/DataHolder.cs", "Sipebi.Core/Constants/ParameterHolder.cs",
-                  "Sipebi.Core/Extension/BaseExtractor.cs", "Sipebi.Core/Extension/Info.cs", "Sipebi.Core/Extension/MiscExtension.cs"]
+rel_namespace_files_list = ["/Mini/SipebiMiniEditor.cs",   "/Core/SipebiEngine.cs",       "/Core/SipebiParagraph.cs",
+                            "/Core/SipebiSettings.cs",     "/Core/SipebiWordDivision.cs", "/Constants/GlobalHolder.cs",
+                            "/Mini/SipebiMiniAnalyzer.cs", "/DataModels/Diagnostics/SipebiDiagnosticsError.cs"]
+
+namespace_files_list = [root_folder + f for f in rel_namespace_files_list]
+
+rel_excluded_files = ["/Core/SipebiAnalyser.cs",
+                      "/Core/SipebiEditor.cs",
+                      "/Core/SipebiWordPositionInSentence.cs",
+                      "/DataModels/Diagnostics/SipebiDiagnosticsError.cs",
+                      "/DataModels/Diagnostics/SipebiDiagnosticsErrorInformation.cs",
+                      "/DataModels/Data/Items/Entri.cs",
+                      "/DataModels/Data/Items/EntriSipebi.cs",
+                      "/DataModels/Data/Items/Makna.cs",
+                      "/DataModels/Data/Items/SipebiFeedback.cs",
+                      "/DataModels/ApplicationPage.cs",
+                      "/Constants/DataHolder.cs",
+                      "/Constants/ParameterHolder.cs",
+                      "/Extension/BaseExtractor.cs",
+                      "/Extension/Info.cs",
+                      "/Extension/MiscExtension.cs"]
+
+excluded_files = [root_folder + f for f in rel_excluded_files]
 
 
 def recurse_files(source):
@@ -49,7 +66,9 @@ for source, destination in file_mapping.items():
 
     for last_source in last_files:
         source_f = open(last_source)
-        if destination == "SipebiMini.Analyser" and source != "Sipebi.Core/Mini/SipebiMiniAnalyser.cs":
+
+        #Special checking? Hack?
+        if destination == "SipebiMini.Analyser" and source != root_folder + "/Mini/SipebiMiniAnalyser.cs":
             if last_source in excluded_files:
                 continue
 
