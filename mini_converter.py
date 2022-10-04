@@ -4,6 +4,7 @@ import argparse
 parser = argparse.ArgumentParser(
     description="Insert the correct source and destination folders"
 )
+
 parser.add_argument(
     "--source_folder",
     type=str,
@@ -16,6 +17,7 @@ parser.add_argument(
     default="C:/ASTrio/VS2017/Desktop/Sipebi",
     help="Destination folder for Sipebi Mini",
 )
+
 args = parser.parse_args()
 
 source_folder = args.source_folder
@@ -75,6 +77,11 @@ rel_excluded_files = [
 
 excluded_files = [source_folder + f for f in rel_excluded_files]
 
+# do NOT replcae anything that is not listed here
+var_replacements = {
+    "PH.SipebiReP": "MDH.SipebiMiniP",
+    "PH.SipebiReK": "MDH.SipebiMiniK",
+}
 
 def recurse_files(source):
     files = os.listdir(source)
@@ -164,10 +171,10 @@ for source, destination in file_mapping.items():
                 # but it maybe mistaken to '...Sipebi.Core {'
                 destination_f.write(f"namespace {namespace} \u007b\n")
             # comment removal, only at the beginning of a line though
-            elif "SipebiSettings.cs" in last_file_name and "PH" in line:
-                line = line.replace("PH", "MDH")
-                line = line.replace("SipebiReP", "SipebiMiniP")
-                line = line.replace("SipebiReK", "SipebiMiniK")
+            # any(condtion) maybe skipped and it will do just fine, I think...
+            elif "SipebiSettings.cs" in last_file_name and any(v in line for v in vr.keys()):
+                for v in filter(lambda v: v in line, vr.keys()):
+                    line = line.replace(v, vr[v])
                 destination_f.write(line)
             elif line.strip().startswith("//"):
                 continue
