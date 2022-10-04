@@ -164,6 +164,8 @@ for source, destination in file_mapping.items():
             destination_f.write("using SipebiMini.Core;\n")
 
         for line in code:
+            #byte order character mark is NOT stripped in Windows, hence, it has to be stripped here
+            line = line.replace("ï»¿", "")
             line = line.replace("\ufeff", "")
             if line.strip().startswith("namespace"):
                 namespace = destination.split("/")[0]
