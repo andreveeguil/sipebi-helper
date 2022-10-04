@@ -172,9 +172,9 @@ for source, destination in file_mapping.items():
                 destination_f.write(f"namespace {namespace} \u007b\n")
             # comment removal, only at the beginning of a line though
             # any(condtion) maybe skipped and it will do just fine, I think...
-            elif "SipebiSettings.cs" in last_file_name and any(v in line for v in vr.keys()):
-                for v in filter(lambda v: v in line, vr.keys()):
-                    line = line.replace(v, vr[v])
+            elif "SipebiSettings.cs" in last_file_name:
+                for v in filter(lambda v: v in line, var_replacements.keys()):
+                    line = line.replace(v, var_replacements[v])
                 destination_f.write(line)
             elif line.strip().startswith("//"):
                 continue
